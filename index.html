@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Mokshasoft AB - seL4 Quick Start</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/cmu-serif" type="text/css"/>
+
+  <style>
+  body {
+      font: 400 15px Lato, sans-serif;
+      line-height: 1.8;
+      color: #818181;
+  }
+  h2 {
+      font-size: 24px;
+      color: #303030;
+      font-weight: 600;
+      margin-bottom: 30px;
+  }
+  h4 {
+      font-size: 19px;
+      line-height: 1.375em;
+      color: #303030;
+      font-weight: 400;
+      margin-bottom: 30px;
+  }
+  .jumbotron {
+      background-color: #ffffff;
+      color: #fff;
+      padding: 70px 25px 40px 25px;
+      font-family: Montserrat, sans-serif;
+  }
+  .container-fluid {
+      padding: 60px 50px;
+  }
+  .bg-grey {
+      background-color: #f6f6f6;
+  }
+  .item h4 {
+      font-size: 19px;
+      line-height: 1.375em;
+      font-weight: 400;
+      font-style: italic;
+      margin: 70px 0;
+  }
+  .item span {
+      font-style: normal;
+  }
+  .navbar {
+      margin-bottom: 0;
+      background-color: #eeeeee;
+      z-index: 9999;
+      border: 0;
+      font-size: 12px !important;
+      line-height: 1.42857143 !important;
+      letter-spacing: 4px;
+      border-radius: 0;
+      font-family: Montserrat, sans-serif;
+  }
+  .navbar li a, .navbar .navbar-brand {
+      color: #66ccff !important;
+  }
+  .navbar-nav li a:hover, .navbar-nav li.active a {
+      color: #ff9966 !important;
+      background-color: #fff !important;
+  }
+  .navbar-default .navbar-toggle {
+      border-color: transparent;
+      color: #fff !important;
+  }
+  footer .glyphicon {
+      font-size: 20px;
+      margin-bottom: 20px;
+      color: #66ccff;
+  }
+  .slideanim {visibility:hidden;}
+  .slide {
+      animation-name: slide;
+      -webkit-animation-name: slide;
+      animation-duration: 1s;
+      -webkit-animation-duration: 1s;
+      visibility: visible;
+  }
+  @keyframes slide {
+    0% {
+      opacity: 0;
+      -webkit-transform: translateY(70%);
+    }
+    100% {
+      opacity: 1;
+      -webkit-transform: translateY(0%);
+    }
+  }
+  @-webkit-keyframes slide {
+    0% {
+      opacity: 0;
+      -webkit-transform: translateY(70%);
+    }
+    100% {
+      opacity: 1;
+      -webkit-transform: translateY(0%);
+    }
+  }
+  @media screen and (max-width: 768px) {
+    .col-sm-4 {
+      text-align: center;
+      margin: 25px 0;
+    }
+    .btn-lg {
+        width: 100%;
+        margin-bottom: 35px;
+    }
+  }
+  </style>
+</head>
+<body id="menu" data-spy="scroll" data-target=".navbar" data-offset="60">
+
+<nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <div>
+        <a class="navbar-brand" href="#menu" style="padding-left:20px;font-size:12px;">seL4 Quick Start</a>
+      </div>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#about">About</a></li>
+        <li><a href="#devsetup">Dev Setup</a></li>
+        <li><a href="#projects">Projects</a></li>
+        <li><a href="#downloading">Downloading</a></li>
+        <li><a href="#compiling">Compiling</a></li>
+        <li><a href="#running">Running</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Container (About) -->
+<div id="about" class="container-fluid bg-grey">
+  <div class="row">
+    <div class="col-sm-12">
+      <h2>About the seL4 Kernel</h2>
+      <p>This text describes how to quickly get started developing <a href="https://sel4.systems">seL4</a> projects on a BeagleBone Black. seL4 is a formally verified micro kernel with the following properties (see <a href="https://sel4.systems/Info/FAQ/proof.pml">https://sel4.systems/Info/FAQ/proof.pml</a> for proof assumptions):</p>
+
+      <ul>
+        <li><b>the implementation behaves according to the specification, i.e. no implementation bugs exist, which means..</b></li>
+        <li>no buffer overflows</li>
+        <li>no null pointer dereferences</li>
+        <li>no pointer errors in general</li>
+        <li>no memory leaks</li>
+        <li>no arithmetic overflows and exceptions</li>
+        <li>no undefined behavior</li>
+        <li>etc</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Container (Dev Setup) -->
+<div id="devsetup" class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+      <h2>Development Machine Setup</h2>
+      <p>Start by installing Ubuntu 16.04. Then run the following commands.</p>
+      <h3>Basic packages needed for seL4 development</h3>
+      <pre>
+sudo apt install build-essential realpath libxml2-utils python-tempita gcc-multilib ccache ncurses-dev
+sudo apt install git repo cmake ninja-build clang gcc-multilib gcc-arm-none-eabi binutils-arm-none-eabi libncurses-dev libxml2-utils libssl-dev libsqlite3-dev libcunit1-dev expect python-pip
+pip install six tempita ply plyplus pyelftools orderedset jinja2
+sudo apt install curl
+curl -sSL https://get.haskellstack.org/ | sh # Or using apt, but the package lags behind a bit, sudo apt install haskell-stack
+sudo apt install qemu-system-arm # Only needed for QEMU
+sudo apt install qemu-system-x86 # Only needed for QEMU
+      </pre>
+      <h3>To compile for BBB</h3>
+      <p>All of these packages may not be needed, I use the arm-linux-gnueabi- toolchain to compile for BBB.</p>
+      <pre>
+sudo apt install binutils-arm-linux-gnueabi
+sudo apt install gcc-arm*
+sudo apt install g++-arm-linux-gnueabi
+      </pre>
+      <h3>For serial console debugging</h3>
+      <pre>
+sudo apt install minicom
+      </pre>
+      <h3>To compile RefOS</h3>
+      <pre>
+pip install lxml
+      </pre>
+    </div>
+  </div>
+</div>
+
+<!-- Container (Projects) -->
+<div id="projects" class="container-fluid bg-grey">
+  <div class="row">
+    <div class="col-sm-12">
+      <h2>Projects to Start with</h2>
+      <p>These projects are a good start for testing and learning the seL4 ecosystem.</p>
+      <ul>
+        <li>The seL4 test suite
+          <p><a href="https://github.com/seL4/sel4test">https://github.com/seL4/sel4test</a></p>
+        </li>
+        <li>CAmkES (component architecture for microkernel-based embedded systems) test suite and example apps.
+          <p><a href="https://github.com/seL4/camkes">https://github.com/seL4/camkes</a></p>
+          <p><a href="https://wiki.sel4.systems/CAmkES/">https://wiki.sel4.systems/CAmkES</a></p>
+        </li>
+        <li>RefOS, an example operating system built on top of seL4
+          <p><a href="https://github.com/seL4/refos">https://github.com/seL4/refos</a></p>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Container (Downloading) -->
+<div id="downloading" class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+      <h2>Downloading the Code</h2>
+      <h3>sel4test</h3>
+      <pre>
+mkdir seL4test
+cd seL4test
+repo init -u https://github.com/seL4/sel4test-manifest.git
+repo sync
+      </pre>
+      <h3>CAmkES</h3>
+      <pre>
+mkdir camkes
+cd camkes
+repo init -u https://github.com/seL4/camkes-manifest.git
+repo sync
+      </pre>
+      <h3>RefOS</h3>
+      <pre>
+mkdir refos
+cd refos
+repo init -u https://github.com/seL4/refos-manifest.git
+repo sync
+      </pre>
+    </div>
+  </div>
+</div>
+
+<!-- Container (Compiling) -->
+<div id="compiling" class="container-fluid bg-grey">
+  <div class="row">
+    <div class="col-sm-12">
+      <h2>Compiling it!</h2>
+      <p>Use the following scripts in the repo root folder of each project. By default the scripts compile the BBB binary, update the recipe variable to compile for simulation.</p>
+      <h3>sel4test</h3>
+      <pre>
+#!/bin/sh
+
+set -e # abort script on error
+recipe="bbb"
+
+if [ $recipe = "arm-qemu" ] ; then
+  echo "Building a defconfig for arm to run on QEMU"
+  make clean
+  make kzm_simulation_release_xml_defconfig
+  make silentoldconfig
+  make
+elif [ $recipe = "bbb" ] ; then
+  echo "Building the BeagleBone Black defconfig"
+  make clean
+  make bbone_black_debug_xml_defconfig
+  make
+else
+  echo "recipe not recognized"
+fi
+      </pre>
+      <h3>CAmkES</h3>
+      <p>The CAmkES project needs a defconfig for the BBB.</p>
+      <pre>
+wget -O configs/arm_simple_bbone_black_defconfig http://mokshasoft.com/seL4/defconfig/arm_simple_bbone_black_defconfig
+      </pre>
+      <pre>
+#!/bin/sh
+
+set -e # abort script on error
+recipe="bbb"
+
+if [ $recipe = "arm-qemu" ] ; then
+  echo "Building a defconfig for arm to run on QEMU"
+  make clean
+  make arm_simple_defconfig
+  make silentoldconfig
+  make
+elif [ $recipe = "bbb" ] ; then
+  echo "Building the BeagleBone Black defconfig"
+  make clean
+  make arm_simple_bbone_black_defconfig
+  make
+  elf="images/capdl-loader-experimental-image-arm-am335x"
+  arm-linux-gnueabi-objcopy -O binary $elf $elf.bin
+else
+  echo "recipe not recognized"
+fi
+      </pre>
+      <h3>RefOS</h3>
+      <p>The RefOS project needs a defconfig for the BBB.</p>
+      <pre>
+wget -O configs/bbone_black_debug_defconfig http://mokshasoft.com/seL4/defconfig/bbone_black_debug_defconfig
+      </pre>
+      <pre>
+#!/bin/sh
+
+set -e # abort script on error
+recipe="bbb"
+
+if [ $recipe = "arm-qemu" ] ; then
+  echo "Building a defconfig for arm to run on QEMU"
+  make clean
+  make kzm_debug_defconfig
+  make silentoldconfig
+  make
+elif [ $recipe = "bbb" ] ; then
+  echo "Building the BeagleBone Black defconfig"
+  make clean
+  make bbone_black_debug_defconfig
+  make silentoldconfig
+  make
+  elf="images/refos-image"
+  arm-linux-gnueabi-objcopy -O binary $elf $elf.bin
+else
+  echo "recipe not recognized"
+fi
+      </pre>
+    </div>
+  </div>
+</div>
+
+<!-- Container (Running) -->
+<div id="running" class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+      <h2>Running the Binaries on BBB</h2>
+      <p>Copy the binary (*.bin) in the images folder to the root of a FAT32 formatted SD card and insert it in the BBB.</p>
+      <h3>Boot by interrupting U-boot using an FTDI serial cable</h3>
+      <ol>
+        <li>Connect the J1 on the BBB to the black cable on the FTDI connector</li>
+        <li>Connect the USB side of the FTDI cable to the dev machine</li>
+        <li>Turn off hardware flow control (sudo minicom -s; Serial port setup -> Hardware Flow Control)</li>
+        <li>Run, sudo minicom -D /dev/ttyUSB0 -b 115200</li>
+        <li>Connect the power cable to the BBB</li>
+        <li>Interrupt the boot process by pressing ENTER quickly a few times</li>
+        <li>Follow instructions on how to boot from the SD card</li>
+      </ol>
+      <h3>Boot from the SD card</h3>
+      <p>Enter these commands in the U-boot prompt (=>)</p>
+      <pre>
+setenv sel4bin &lt;bin-file&gt; # the name of the binary file in the SD card root
+setenv loadaddr 0x82000000
+fatload mmc 0 ${loadaddr} ${sel4bin}
+go ${loadaddr}
+      </pre>
+      <p>The loadaddr can be found by tracing the build with strace, and searching for the -Ttext switch in the last ld command.<br>
+      strace -s 1000 -f -o make.strace -e trace=process make V=1</p>
+      <h2>Running the Binaries on QEMU</h2>
+      <p>Close QEMU with 'Ctrl-a x' after the programs have finished.</p>
+      <h3>sel4test</h3>
+      <pre>
+qemu-system-arm -nographic -M kzm -kernel images/sel4test-driver-image-arm-imx31
+      </pre>
+      <h3>CAmkES</h3>
+      <pre>
+qemu-system-arm -nographic -M kzm -kernel images/capdl-loader-experimental-image-arm-imx31
+      </pre>
+      <h3>RefOS</h3>
+      <pre>
+qemu-system-arm -nographic -M kzm -kernel images/refos-image
+      </pre>
+    </div>
+  </div>
+</div>
+
+<!-- Container (Contact) -->
+<div id="contact" class="container-fluid bg-grey">
+  <div class="row">
+    <div class="col-sm-12">
+      <h2>Contact</h2>
+      <p>Contact me if you have any questions or comments on seL4 or this tutorial.</p>
+      <p><span class="glyphicon glyphicon-phone"></span>
+        <a href="tel:+46707310627">+46 707 31 06 27</a>
+      </p>
+      <p><span class="glyphicon glyphicon-envelope"></span>
+        <a href="mailto:jonas.cl@protonmail.com" target="_top">jonas.cl@protonmail.com</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<footer class="container-fluid text-center">
+  Copyright 2017 Mokshasoft AB</br>
+  Published 2017-05-03</br>
+  <a href="#menu" title="To Top">
+    <span class="glyphicon glyphicon-chevron-up"></span>
+  </a>
+</footer>
+
+<script>
+$(document).ready(function(){
+  // Add smooth scrolling to all links in navbar + footer link
+  $(".navbar a, footer a[href='#menu']").on('click', function(event) {
+    // Make sure this.hash has a value before overriding default behavior
+    if (this.hash !== "") {
+      // Prevent default anchor click behavior
+      event.preventDefault();
+
+      // Store hash
+      var hash = this.hash;
+
+      // Using jQuery's animate() method to add smooth page scroll
+      // The optional number (900) specifies the number of milliseconds it takes to scroll to the specified area
+      $('html, body').animate({
+        scrollTop: $(hash).offset().top
+      }, 900, function(){
+
+        // Add hash (#) to URL when done scrolling (default click behavior)
+        window.location.hash = hash;
+      });
+    } // End if
+  });
+
+  $(window).scroll(function() {
+    $(".slideanim").each(function(){
+      var pos = $(this).offset().top;
+
+      var winTop = $(window).scrollTop();
+        if (pos < winTop + 600) {
+          $(this).addClass("slide");
+        }
+    });
+  });
+})
+</script>
+
+</body>
+</html>
+
