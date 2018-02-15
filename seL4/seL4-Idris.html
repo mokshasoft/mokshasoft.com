@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Mokshasoft AB</title>
+  <title>Mokshasoft AB - Idris bringup on seL4</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -11,7 +11,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <link rel="stylesheet" media="screen" href="https://fontlibrary.org/face/cmu-serif" type="text/css"/>
-  <link rel="stylesheet" href="./css/master.css" type="text/css">
+  <link rel="stylesheet" href="../css/master.css" type="text/css">
 </head>
 <body id="menu" data-spy="scroll" data-target=".navbar" data-offset="60">
 
@@ -24,77 +24,98 @@
         <span class="icon-bar"></span>
       </button>
       <div>
-        <a class="navbar-brand" href="#menu" style="padding-left:20px;font-size:12px;">Mokshasoft AB</a>
+        <a class="navbar-brand" href="#menu" style="padding-left:20px;font-size:12px;">Idris on seL4</a>
       </div>
     </div>
     <div class="collapse navbar-collapse" id="myNavbar">
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#about">About</a></li>
-        <li><a href="#seL4">seL4</a></li>
-        <li><a href="#whyfp">Why FP?</a></li>
+        <li><a href="#why">Why?</a></li>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#code">Code</a></li>
+        <li><a href="#buildandrun">Build and Run</a></li>
         <li><a href="#contact">Contact</a></li>
       </ul>
     </div>
   </div>
 </nav>
 
-<!-- Container (About) -->
-<div id="about" class="container-fluid bg-grey">
+<!-- Container (Why?) -->
+<div id="why" class="container-fluid bg-grey">
   <div class="row">
     <div class="col-sm-12">
-      <h2>About Mokshasoft AB</h2>
-      <p>Mokshasoft is a one-man company doing freelance work within open-source, with an interest in the following areas:</p>
+      <h2>Why running Idris apps on seL4?</h2>
+      <p>Idris is a dependently typed pure functional programming languages.
+        In short this means that it is very powerful, which makes it magnitudes
+        easier to write correct code and verify it compared to the normal
+        imperative programs. If a solid application is built on an unstable
+        foundation, it is not so solid anymore, right? To date, there is not a
+        more solid foundation to build applications on than seL4. The reasons
+        can be summed up in these bullets.
+      </p>
       <ul>
-        <li>Computer security</li>
-        <li>Functional programming (using <a href="https://www.haskell.org/">Haskell</a>, <a href="https://www.idris-lang.org/">Idris</a> and <a href="http://elm-lang.org/">elm</a>)</li>
-        <li><a href="https://sel4.systems/">seL4</a> - a formally verified microkernel</li>
-        <li>Formal verification</li>
+        <li>seL4 contains no implementation bugs in the verified code</li>
+        <li>Dependent types is probably the most powerful way to write correct software</li>
+        <li>It was fun :)</li>
       </ul>
     </div>
   </div>
 </div>
 
-<!-- Container (seL4) -->
-<div id="seL4" class="container-fluid">
+<!-- Container (Prerequisites) -->
+<div id="prerequisites" class="container-fluid">
   <div class="row">
     <div class="col-sm-12">
-      <h2>seL4 - a formally verified microkernel</h2>
-      <p>These are the open-source projects I've done so far with seL4:</p>
+      <h2>Prerequisites</h2>
+      <p>To build this application the seL4 build system and the Idris compiler needs to be setup.</p>
       <ul>
-        <li>An <a href="seL4/seL4-beaglebone-black.html">seL4 Quick Start Guide</a>, on how to run seL4 on BeagleBone Black.</li>
-        <li>An <a href="seL4/seL4-Idris.html">Idris bringup on seL4</a></li>
+        <li><a href="https://sel4.systems/">https://sel4.systems/</a></li>
+        <li><a href="https://www.idris-lang.org/">https://www.idris-lang.org/</a></li>
       </ul>
     </div>
   </div>
 </div>
 
-<!-- Container (Why FP) -->
-<div id="whyfp" class="container-fluid bg-grey">
+<!-- Container (Code) -->
+<div id="code" class="container-fluid bg-grey">
   <div class="row">
     <div class="col-sm-12">
-      <h2>Why Functional Programming (FP)?</h2>
-      <p>This is a short list of some interesting links that explains some of the powers of FP.</p>
-      <ul>
-        <li>
-          <a href="https://www.schoolofhaskell.com/school/advanced-haskell/beautiful-concurrency">
-            Beautiful Concurrency</a>
-          <p>How to write correct parallel programs using FP.</p>
-        </li>
-        <li>
-          <a href="https://youtu.be/sJwcm_worfM">
-            Refinement through Restraint: Bringing Down the Cost of Verification</a>
-          <p>How using FP simplifies verification of software.</p>
-        </li>
-      </ul>
+      <h2>Get the Code!</h2>
+      <p>Run the following to get the code.</p>
+      <pre>
+mkdir sel4-idris
+cd sel4-idris
+repo init -u https://github.com/mokshasoft/sel4-idris-manifest.git
+repo sync
+      </pre>
+    </div>
+  </div>
+</div>
+
+<!-- Container (Build and Run) -->
+<div id="buildandrun" class="container-fluid">
+  <div class="row">
+    <div class="col-sm-12">
+      <h2>Build and run it in QEMU</h2>
+      <p>Run the following to build and run it:</p>
+      <pre>
+make x64_hello-idris-1_defconfig
+make simulate
+      </pre>
+      <p>After the boot the following should be displayed in the terminal:</p>
+      <pre>
+seL4 <3 Idris
+      </pre>
+      <p>Quit QEMU with 'Ctrl-a c'</p>
     </div>
   </div>
 </div>
 
 <!-- Container (Contact) -->
-<div id="contact" class="container-fluid">
+<div id="contact" class="container-fluid bg-grey">
   <div class="row">
     <div class="col-sm-12">
       <h2>Contact</h2>
+      <p>Contact me if you have any questions or comments on seL4, Idris or this tutorial.</p>
       <p><span class="glyphicon glyphicon-phone"></span>
         <a href="tel:+46707310627">+46 707 31 06 27</a>
       </p>
